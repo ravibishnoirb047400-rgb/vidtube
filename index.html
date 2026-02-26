@@ -107,12 +107,21 @@
             itemsPerPage: 20
         };
 
+        // हर बार रिफ्रेश करने पर रैंडम टॉपिक्स की लिस्ट
+        const randomTopics = [
+            "latest trending", "viral videos", "music hits India", 
+            "gaming highlights", "comedy shorts", "tech gadgets", 
+            "news today", "sports moments", "cooking hacks", 
+            "bollywood updates", "cricket highlights", "motivation hindi"
+        ];
+        const randomInitialQuery = randomTopics[Math.floor(Math.random() * randomTopics.length)];
+
         // Centralized State Management
         const Store = {
             videos: [],
             shorts: [],
             page: 1,
-            query: "latest trending",
+            query: randomInitialQuery, // यहाँ रैंडम टॉपिक सेट किया गया है
             isLoading: false,
             isSidebarOpen: true,
             watched: JSON.parse(localStorage.getItem('sh_watched')) || {},
@@ -199,7 +208,7 @@
     <div class="flex pt-14 h-screen">
         
         <!-- SIDEBAR -->
-        <aside id="sidebar" class="w-64 bg-white h-full overflow-y-auto hidden lg:block pb-4 pr-2 hover:overflow-y-scroll transition-all">
+        <aside id="sidebar" class="w-64 bg-white h-full overflow-y-auto hidden lg:block pb-4 pr-2 hover:overflow-y-scroll transition-all flex flex-col justify-between">
             <div class="p-3 space-y-1">
                 <div onclick="App.filter('Trending')" class="sidebar-item active flex items-center gap-5 px-3 py-2.5 cursor-pointer text-gray-800">
                     <i class="fas fa-home text-lg w-6"></i> <span class="text-sm">Home</span>
@@ -242,11 +251,18 @@
                 
                 <hr class="my-3 border-gray-200">
                 
-                <div class="px-4 text-xs text-gray-500 font-medium">
-                    <p class="mb-2">About Press Copyright</p>
-                    <p class="mb-2">Contact us Creators</p>
-                    <p class="mb-2">Developers</p>
-                    <p class="mt-4">© 2026 StreamHub LLC</p>
+                <!-- Updated Footer with Arvind Bishnoi Credit -->
+                <div class="px-4 text-xs text-gray-500 font-medium pb-4">
+                    <p class="mb-2 hover:text-gray-800 cursor-pointer">About Press Copyright</p>
+                    <p class="mb-2 hover:text-gray-800 cursor-pointer">Contact us Creators</p>
+                    <p class="mb-2 hover:text-gray-800 cursor-pointer">Developers</p>
+                    
+                    <div class="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-100 shadow-sm text-center">
+                        <p>© 2026 StreamHub LLC</p>
+                        <p class="mt-1 text-sm text-blue-600 font-bold flex items-center justify-center gap-1">
+                            <i class="fas fa-code text-xs"></i> @ Arvind Bishnoi
+                        </p>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -730,6 +746,7 @@
                 msgBox.scrollTop = msgBox.scrollHeight;
 
                 try {
+                    // AI को अरविंद बिश्नोई (आपका नाम) सिखाया गया है
                     const res = await fetch(AppConfig.aiHost, {
                         method: 'POST',
                         headers: {
@@ -739,7 +756,10 @@
                         body: JSON.stringify({
                             model: "gpt-3.5-turbo",
                             messages: [
-                                {role: "system", content: "You are StreamHub AI. Be helpful, concise and fun. Use emojis."},
+                                {
+                                    role: "system", 
+                                    content: "You are StreamHub AI. Be helpful, concise and fun. Use emojis. If anyone asks 'who created you', 'who made this website', 'who is your creator', or similar questions, you must strictly answer 'I was created by Arvind Dara bishnoi'."
+                                },
                                 {role: "user", content: text}
                             ]
                         })
